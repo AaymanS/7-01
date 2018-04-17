@@ -18,27 +18,43 @@ nightmareThing.y = display.contentCenterY + 177
 nightmareThing.id = "Unknown object"
 
 -- the button of talking
-local function catButton( event )
-
-	local y = 0
-
-	local catTalking = display.newText( "WHAT IS THAT THING?!?!", display.contentCenterX - 520, display.contentCenterY + 300, native.systemFont, 50 )
+local function monsterCatTouch( event )
+    if ( event.phase == "began" ) then
+        print( "Touch event began on: " .. event.target.id )
+    elseif ( event.phase == "ended" ) then
+        print( "Touch event ended on: " .. event.target.id )
+    end
+    	
+    return true
+	
 end
 
-monsterCat:addEventListener( "touch", catButton)
+	monsterCat:addEventListener( "touch", monsterCatTouch)
 
+
+
+
+ 
 function nightmareThing:touch( event )
-
-	local thingTalking = display.newText( "*EEERRRRGGGGHHHHHHH*", display.contentCenterX + 520, display.contentCenterY - 277, native.systemFont, 50 )
-
-	-- Set touch focus
-    display.getCurrentStage():setFocus( self )
-    self.isFocus = true
-
-    -- Reset touch focus
-    display.getCurrentStage():setFocus( nil )
-    self.isFocus = nil
-
+    if ( event.phase == "began" ) then
+        print( "Touch event began on: " .. self.id )
+ 
+        -- Set touch focus
+        display.getCurrentStage():setFocus( self )
+        self.isFocus = true
+     
+    elseif ( self.isFocus ) then
+        if ( event.phase == "moved" ) then
+            print( "Moved phase of touch event detected." )
+ 
+        elseif ( event.phase == "ended" or event.phase == "cancelled" ) then
+ 
+            -- Reset touch focus
+            display.getCurrentStage():setFocus( nil )
+            self.isFocus = nil
+        end
+    end
+    return true
 end
 
 nightmareThing:addEventListener( "touch", nightmareThing )
